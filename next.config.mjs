@@ -8,6 +8,9 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    esmExternals: 'loose', // or true
+  },
 };
 
 export default nextConfig;
