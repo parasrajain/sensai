@@ -35,7 +35,11 @@ const PDFDownloadLink = dynamic(
     { ssr: false }
 );
 
-import ResumePDF from '@/components/pdf/ResumePDF';
+// import ResumePDF from '@/components/pdf/ResumePDF';
+const ResumePDF = dynamic(() => import('@/components/pdf/ResumePDF'), {
+  ssr: false,
+});
+
 
 export default function ResumeBuilder({ initialContent }) {
     const [activeTab, setActiveTab] = useState("edit");
