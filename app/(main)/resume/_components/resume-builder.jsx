@@ -30,15 +30,19 @@ import dynamic from "next/dynamic";
 //     ssr: false,
 // });
 
-const PDFDownloadLink = dynamic(
-    () => import("@react-pdf/renderer").then(mod => mod.PDFDownloadLink),
+// const PDFDownloadLink = dynamic(
+//     () => import("@react-pdf/renderer").then(mod => mod.PDFDownloadLink),
+//     { ssr: false }
+// );
+
+// const ResumePDF = dynamic(() => import('@/components/pdf/ResumePDF'), {
+//   ssr: false,
+// });
+const PDFDownloadWrapper = dynamic(
+    () => import('@/components/pdf/PDFDownloadWrapper'),
     { ssr: false }
 );
 
-// import ResumePDF from '@/components/pdf/ResumePDF';
-const ResumePDF = dynamic(() => import('@/components/pdf/ResumePDF'), {
-  ssr: false,
-});
 
 
 export default function ResumeBuilder({ initialContent }) {
@@ -223,36 +227,17 @@ export default function ResumeBuilder({ initialContent }) {
             )}
           </Button> */}
 
-                    <PDFDownloadLink
-                        document={
-                            <ResumePDF
-                                data={{
-                                    // name:user.fullName,
-                                    contactInfo: formValues.contactInfo,
-                                    summary: formValues.summary,
-                                    skills: formValues.skills,
-                                    experience: formValues.experience,
-                                    education: formValues.education,
-                                    projects: formValues.projects,
-                                }}
-                            />
-                        }
-                        fileName="resume.pdf"
-                    >
-                        {({ loading }) =>
-                            loading ? (
-                                <Button disabled>
-                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                    Generating...
-                                </Button>
-                            ) : (
-                                <Button>
-                                    <Download className="h-4 w-4" />
-                                    Download PDF
-                                </Button>
-                            )
-                        }
-                    </PDFDownloadLink>
+                    <PDFDownloadWrapper
+                        data={{
+                            contactInfo: formValues.contactInfo,
+                            summary: formValues.summary,
+                            skills: formValues.skills,
+                            experience: formValues.experience,
+                            education: formValues.education,
+                            projects: formValues.projects,
+                        }}
+                    />
+
 
 
 

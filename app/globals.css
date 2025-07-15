@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -227,4 +229,12 @@
 .pdf-version * {
   color: inherit !important;
   background: inherit !important;
+}
+
+/* globals.css or inside a component style block */
+.resume-pdf-export * {
+  background-color: white !important;
+  color: black !important;
+  box-shadow: none !important;
+  filter: none !important;
 }
