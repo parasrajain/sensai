@@ -61,9 +61,7 @@ export async function updateUser(data) {
       }
     )
     // revalidatePath("/");
-    return result.user;
-
-
+    return { success: true, user: result.updatedUser };
   }
   catch (error) {
     console.error("Error updating user:", error);

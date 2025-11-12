@@ -68,10 +68,10 @@ const OnboardingForm = ({ industries }) => {
   useEffect(() => {
     if (updateResult?.success && !updateLoading) {
       toast.success("Profile completed successfully!");
-      router.push("/dashboard");
-      router.refresh();
+      // Use window.location.href for hard navigation to trigger server-side redirect
+      window.location.href = "/dashboard";
     }
-  }, [updateResult, updateLoading]);
+  }, [updateResult, updateLoading, router]);
 
   const watchIndustry = watch("industry");
 
