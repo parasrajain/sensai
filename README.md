@@ -6,13 +6,10 @@ Here is a professional, comprehensive `README.md` file for your project, crafted
 
 A full-stack AI-powered career development platform built with Next.js 15, React 19, and Groq AI.
 
-  
-
-[**Live Demo (TBD)**](https://your-demo-url.com) · [**Report a Bug**](https://www.google.com/search?q=https://github.com/your-username/sensai/issues) · [**Request a Feature**](https://www.google.com/search?q=https://github.com/your-username/sensai/issues)
 
 -----
 
-*(Add a screenshot of your application's dashboard here)*
+
 
 SENSAI helps professionals advance their careers through AI-driven insights, interview preparation, resume building, and cover letter generation. It leverages the speed of Groq AI and Next.js 15 Server Actions to deliver a seamless, responsive experience.
 
@@ -82,6 +79,8 @@ The application uses a server-centric model where the Next.js frontend communica
       * Uses **Inngest** to trigger and manage background jobs (like the weekly industry data update).
   * **Data & AI:** The persistent layer, decoupled from the main application logic.
 
+  <img width="1936" height="2466" alt="image" src="https://github.com/user-attachments/assets/14f74f3e-c883-4cab-b64e-4bf0a89d7063" />
+
 -----
 
 ## 🗄️ Database Schema
@@ -93,6 +92,10 @@ The database is designed to be relational and user-centric. The `users` table, l
   * **`resumes`**: Stores resume content (as text/markdown), ATS score, and feedback.
   * **`coverLetters`**: Stores generated cover letters and their associated job descriptions.
   * **`assessments`**: Stores the results of each mock quiz, including score, questions, and improvement tips.
+
+
+<img width="2203" height="2712" alt="image" src="https://github.com/user-attachments/assets/4932a4f8-04bd-4b0f-baaa-6b3547763ec9" />
+
 
 -----
 
