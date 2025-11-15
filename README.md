@@ -1,7 +1,3 @@
-Here is a professional, comprehensive `README.md` file for your project, crafted from the details and diagrams you provided.
-
------
-
 # SENSAI - AI Career Coach Platform
 
 A full-stack AI-powered career development platform built with Next.js 15, React 19, and Groq AI.
