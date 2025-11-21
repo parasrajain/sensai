@@ -27,62 +27,96 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
-    fontSize: 11,
+    padding: "30 40",
+    fontSize: 10.5,
     fontFamily: "Helvetica",
-    lineHeight: 1.5,
-    color: "#333",
+    lineHeight: 1.4,
+    color: "#000000",
+    backgroundColor: "#ffffff",
   },
   header: {
-    textAlign: "center",
-    marginBottom: 15,
+    marginBottom: 20,
+    borderBottomWidth: 2,
+    borderBottomColor: "#000000",
+    paddingBottom: 10,
   },
   name: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 4,
-    color: "#111",
+    marginBottom: 6,
+    color: "#000000",
+    letterSpacing: 0.5,
   },
   contact: {
-    fontSize: 10,
-    color: "#555",
+    fontSize: 9.5,
+    color: "#000000",
+    marginTop: 4,
+    lineHeight: 1.3,
+  },
+  contactItem: {
+    marginBottom: 2,
   },
   section: {
-    marginBottom: 16,
+    marginBottom: 14,
   },
   sectionTitle: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: "bold",
-    color: "#2c3e50",
-    marginBottom: 8,
+    color: "#000000",
+    marginBottom: 6,
     textTransform: "uppercase",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    paddingBottom: 3,
+    letterSpacing: 1,
+    borderBottomWidth: 1.5,
+    borderBottomColor: "#000000",
+    paddingBottom: 2,
   },
   entry: {
-    marginBottom: 6,
+    marginBottom: 10,
+  },
+  entryHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 2,
   },
   entryTitle: {
     fontSize: 11,
     fontWeight: "bold",
-    color: "#222",
+    color: "#000000",
   },
-  entrySubtitle: {
-    fontSize: 10,
+  entryOrganization: {
+    fontSize: 10.5,
+    color: "#000000",
+    marginBottom: 2,
+  },
+  entryDuration: {
+    fontSize: 9.5,
+    color: "#000000",
     fontStyle: "italic",
-    color: "#555",
   },
   entryDescription: {
     fontSize: 10,
-    color: "#333",
+    color: "#000000",
+    marginTop: 3,
+    lineHeight: 1.4,
+    textAlign: "justify",
+  },
+  skillsText: {
+    fontSize: 10,
+    color: "#000000",
+    lineHeight: 1.5,
+  },
+  bullet: {
+    fontSize: 10,
     marginTop: 2,
+    paddingLeft: 15,
+    color: "#000000",
   },
 });
 
 export default function ResumePDF({ data }) {
   const {
     contactInfo,
+    name,
     summary,
     skills,
     experience,
@@ -95,19 +129,21 @@ export default function ResumePDF({ data }) {
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.name}>{contactInfo?.name || "Your Name"}</Text>
-          <Text style={styles.contact}>
-            {contactInfo?.email} | {contactInfo?.mobile} |{" "}
+          <Text style={styles.name}>{name || contactInfo?.name || "Your Name"}</Text>
+          <View style={styles.contact}>
+            {contactInfo?.email && (
+              <Text style={styles.contactItem}>Email: {contactInfo.email}</Text>
+            )}
+            {contactInfo?.mobile && (
+              <Text style={styles.contactItem}>Phone: {contactInfo.mobile}</Text>
+            )}
             {contactInfo?.linkedin && (
-              <Link src={contactInfo.linkedin}>{contactInfo.linkedin}</Link>
+              <Text style={styles.contactItem}>LinkedIn: {contactInfo.linkedin}</Text>
             )}
             {contactInfo?.twitter && (
-              <>
-                {" | "}
-                <Link src={contactInfo.twitter}>{contactInfo.twitter}</Link>
-              </>
+              <Text style={styles.contactItem}>Twitter: {contactInfo.twitter}</Text>
             )}
-          </Text>
+          </View>
         </View>
 
         {/* Summary */}
@@ -121,24 +157,30 @@ export default function ResumePDF({ data }) {
         {/* Skills */}
         {skills && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Skills</Text>
-            <Text style={styles.entryDescription}>{skills}</Text>
+            <Text style={styles.sectionTitle}>Technical Skills</Text>
+            <Text style={styles.skillsText}>{skills}</Text>
           </View>
         )}
 
         {/* Experience */}
         {experience?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Work Experience</Text>
-            {experience.map((item, i) => (
-              <View key={i} style={styles.entry}>
-                <Text style={styles.entryTitle}>
-                  {item.title} — {item.company}
-                </Text>
-                <Text style={styles.entrySubtitle}>{item.duration}</Text>
-                <Text style={styles.entryDescription}>{item.description}</Text>
-              </View>
-            ))}
+            <Text style={styles.sectionTitle}>Professional Experience</Text>
+            {experience.map((item, i) => {
+              const duration = item.current
+                ? `${item.startDate} - Present`
+                : `${item.startDate} - ${item.endDate}`;
+              return (
+                <View key={i} style={styles.entry}>
+                  <View style={styles.entryHeader}>
+                    <Text style={styles.entryTitle}>{item.title}</Text>
+                    <Text style={styles.entryDuration}>{duration}</Text>
+                  </View>
+                  <Text style={styles.entryOrganization}>{item.organization}</Text>
+                  <Text style={styles.entryDescription}>{item.description}</Text>
+                </View>
+              );
+            })}
           </View>
         )}
 
@@ -146,15 +188,23 @@ export default function ResumePDF({ data }) {
         {education?.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Education</Text>
-            {education.map((item, i) => (
-              <View key={i} style={styles.entry}>
-                <Text style={styles.entryTitle}>
-                  {item.degree} — {item.institution}
-                </Text>
-                <Text style={styles.entrySubtitle}>{item.duration}</Text>
-                <Text style={styles.entryDescription}>{item.description}</Text>
-              </View>
-            ))}
+            {education.map((item, i) => {
+              const duration = item.current
+                ? `${item.startDate} - Present`
+                : `${item.startDate} - ${item.endDate}`;
+              return (
+                <View key={i} style={styles.entry}>
+                  <View style={styles.entryHeader}>
+                    <Text style={styles.entryTitle}>{item.title}</Text>
+                    <Text style={styles.entryDuration}>{duration}</Text>
+                  </View>
+                  <Text style={styles.entryOrganization}>{item.organization}</Text>
+                  {item.description && (
+                    <Text style={styles.entryDescription}>{item.description}</Text>
+                  )}
+                </View>
+              );
+            })}
           </View>
         )}
 
@@ -162,12 +212,25 @@ export default function ResumePDF({ data }) {
         {projects?.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Projects</Text>
-            {projects.map((item, i) => (
-              <View key={i} style={styles.entry}>
-                <Text style={styles.entryTitle}>{item.title}</Text>
-                <Text style={styles.entryDescription}>{item.description}</Text>
-              </View>
-            ))}
+            {projects.map((item, i) => {
+              const duration = item.current
+                ? `${item.startDate} - Present`
+                : item.startDate && item.endDate
+                ? `${item.startDate} - ${item.endDate}`
+                : "";
+              return (
+                <View key={i} style={styles.entry}>
+                  <View style={styles.entryHeader}>
+                    <Text style={styles.entryTitle}>{item.title}</Text>
+                    {duration && <Text style={styles.entryDuration}>{duration}</Text>}
+                  </View>
+                  {item.organization && (
+                    <Text style={styles.entryOrganization}>{item.organization}</Text>
+                  )}
+                  <Text style={styles.entryDescription}>{item.description}</Text>
+                </View>
+              );
+            })}
           </View>
         )}
       </Page>

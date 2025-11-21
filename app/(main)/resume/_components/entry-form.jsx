@@ -27,7 +27,7 @@ const formatDisplayDate = (dateString) => {
   return format(date, "MMM yyyy");
 };
 
-export function EntryForm({ type, entries, onChange }) {
+export function EntryForm({ type, entries = [], onChange }) {
   const [isAdding, setIsAdding] = useState(false);
 
   const {
@@ -52,16 +52,28 @@ export function EntryForm({ type, entries, onChange }) {
   const current = watch("current");
 
   const handleAdd = handleValidation((data) => {
-    const formattedEntry = {
-      ...data,
-      startDate: formatDisplayDate(data.startDate),
-      endDate: data.current ? "" : formatDisplayDate(data.endDate),
-    };
+    try {
+      const formattedEntry = {
+        ...data,
+        startDate: formatDisplayDate(data.startDate),
+        endDate: data.current ? "" : formatDisplayDate(data.endDate),
+      };
 
-    onChange([...entries, formattedEntry]);
+      console.log("Adding entry:", formattedEntry);
+      console.log("Current entries:", entries);
 
-    reset();
-    setIsAdding(false);
+      const newEntries = [...(entries || []), formattedEntry];
+      console.log("New entries:", newEntries);
+
+      onChange(newEntries);
+      toast.success(`${type} added successfully!`);
+
+      reset();
+      setIsAdding(false);
+    } catch (error) {
+      console.error("Error adding entry:", error);
+      toast.error("Failed to add entry");
+    }
   });
 
   const handleDelete = (index) => {
@@ -251,7 +263,15 @@ export function EntryForm({ type, entries, onChange }) {
             >
               Cancel
             </Button>
-            <Button type="button" onClick={handleAdd}>
+            <Button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                console.log("Add button clicked");
+                console.log("Form errors:", errors);
+                handleAdd(e);
+              }}
+            >
               <PlusCircle className="h-4 w-4 mr-2" />
               Add Entry
             </Button>

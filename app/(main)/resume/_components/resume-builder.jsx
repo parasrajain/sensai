@@ -56,9 +56,11 @@ export default function ResumeBuilder({ initialContent }) {
         register,
         handleSubmit,
         watch,
+        setValue,
         formState: { errors },
     } = useForm({
         resolver: zodResolver(resumeSchema),
+        mode: "onChange",
         defaultValues: {
             contactInfo: {},
             summary: "",
@@ -86,7 +88,9 @@ export default function ResumeBuilder({ initialContent }) {
     // Update preview content when form values change
     useEffect(() => {
         if (activeTab === "edit") {
+            console.log("Form values changed:", formValues);
             const newContent = getCombinedContent();
+            console.log("New content generated:", newContent);
             setPreviewContent(newContent ? newContent : initialContent);
         }
     }, [formValues, activeTab]);
@@ -176,15 +180,20 @@ export default function ResumeBuilder({ initialContent }) {
 
     const onSubmit = async (data) => {
         try {
+            console.log("Form data on submit:", data);
+            console.log("Form errors:", errors);
+
             const formattedContent = previewContent
                 .replace(/\n/g, "\n") // Normalize newlines
                 .replace(/\n\s*\n/g, "\n\n") // Normalize multiple newlines to double newlines
                 .trim();
 
-            console.log(previewContent, formattedContent);
+            console.log("Preview content:", previewContent);
+            console.log("Formatted content:", formattedContent);
             await saveResumeFn(previewContent);
         } catch (error) {
             console.error("Save error:", error);
+            toast.error("Failed to save resume: " + error.message);
         }
     };
 
@@ -229,6 +238,7 @@ export default function ResumeBuilder({ initialContent }) {
 
                     <PDFDownloadWrapper
                         data={{
+                            name: user?.fullName,
                             contactInfo: formValues.contactInfo,
                             summary: formValues.summary,
                             skills: formValues.skills,
@@ -361,13 +371,19 @@ export default function ResumeBuilder({ initialContent }) {
                             <Controller
                                 name="experience"
                                 control={control}
-                                render={({ field }) => (
-                                    <EntryForm
-                                        type="Experience"
-                                        entries={field.value}
-                                        onChange={field.onChange}
-                                    />
-                                )}
+                                render={({ field }) => {
+                                    console.log("Experience field value:", field.value);
+                                    return (
+                                        <EntryForm
+                                            type="Experience"
+                                            entries={field.value || []}
+                                            onChange={(newValue) => {
+                                                console.log("Experience onChange called with:", newValue);
+                                                field.onChange(newValue);
+                                            }}
+                                        />
+                                    );
+                                }}
                             />
                             {errors.experience && (
                                 <p className="text-sm text-red-500">
@@ -382,13 +398,19 @@ export default function ResumeBuilder({ initialContent }) {
                             <Controller
                                 name="education"
                                 control={control}
-                                render={({ field }) => (
-                                    <EntryForm
-                                        type="Education"
-                                        entries={field.value}
-                                        onChange={field.onChange}
-                                    />
-                                )}
+                                render={({ field }) => {
+                                    console.log("Education field value:", field.value);
+                                    return (
+                                        <EntryForm
+                                            type="Education"
+                                            entries={field.value || []}
+                                            onChange={(newValue) => {
+                                                console.log("Education onChange called with:", newValue);
+                                                field.onChange(newValue);
+                                            }}
+                                        />
+                                    );
+                                }}
                             />
                             {errors.education && (
                                 <p className="text-sm text-red-500">
@@ -403,13 +425,19 @@ export default function ResumeBuilder({ initialContent }) {
                             <Controller
                                 name="projects"
                                 control={control}
-                                render={({ field }) => (
-                                    <EntryForm
-                                        type="Project"
-                                        entries={field.value}
-                                        onChange={field.onChange}
-                                    />
-                                )}
+                                render={({ field }) => {
+                                    console.log("Projects field value:", field.value);
+                                    return (
+                                        <EntryForm
+                                            type="Project"
+                                            entries={field.value || []}
+                                            onChange={(newValue) => {
+                                                console.log("Projects onChange called with:", newValue);
+                                                field.onChange(newValue);
+                                            }}
+                                        />
+                                    );
+                                }}
                             />
                             {errors.projects && (
                                 <p className="text-sm text-red-500">
