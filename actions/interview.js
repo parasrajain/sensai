@@ -46,7 +46,7 @@ export async function generateQuiz() {
 
   try {
     const response = await groq.chat.completions.create({
-      model: "llama-3.1-8b-instant",
+      model: "openai/gpt-oss-20b",
       messages: [
         {
           role: "system",
@@ -139,7 +139,7 @@ export async function saveQuizResult(questions, answers, score) {
 
     try {
       const tipResponse = await groq.chat.completions.create({
-        model: "llama-3.3-70b-versatile",
+        model: "openai/gpt-oss-20b",
         messages: [
           {
             role: "user",
