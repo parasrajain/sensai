@@ -58,18 +58,34 @@ export async function generateQuiz() {
         },
       ],
       temperature: 0.7,
+      response_format: { type: "json_object" },
     });
 
-    const text = response.choices[0].message.content;
-    const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
+    const text = response.choices?.[0]?.message?.content;
+    if (!text) {
+    throw new Error("Groq returned an empty quiz response");
+    }
+
+    const cleanedText = text
+    .replace(/^```json\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
     const quiz = JSON.parse(cleanedText);
+
+    if (!Array.isArray(quiz.questions) || quiz.questions.length === 0) {
+    throw new Error("Groq returned no quiz questions");
+    }
 
     return {
       success: true,
       questions: quiz.questions,
     };
   } catch (error) {
-    console.error("Error generating quiz:", error);
+    console.error("Error generating quiz:", {
+      message: error instanceof Error ? error.message : String(error),
+      status: error?.status,
+      code: error?.code,
+    });
     return {
       success: false,
       error: "Failed to generate quiz questions. Please try again.",

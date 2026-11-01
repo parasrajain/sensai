@@ -60,7 +60,10 @@ export async function generateCoverLetter(data) {
       temperature: 0.7,
     });
 
-    const content = response.choices[0].message.content.trim();
+    const content = response.choices?.[0]?.message?.content?.trim();
+    if (!content) {
+      throw new Error("Groq returned an empty cover letter response");
+    }
 
     const coverLetter = await db.coverLetter.create({
       data: {
@@ -81,7 +84,11 @@ export async function generateCoverLetter(data) {
       },
     };
   } catch (error) {
-    console.error("Error generating cover letter:", error);
+    console.error("Error generating cover letter:", {
+      message: error instanceof Error ? error.message : String(error),
+      status: error?.status,
+      code: error?.code,
+    });
     return {
       success: false,
       error: "Failed to generate cover letter. Please try again.",

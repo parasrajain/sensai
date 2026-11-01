@@ -83,8 +83,15 @@ export default function Quiz() {
     setCurrentQuestion(0);
     setAnswers([]);
     setShowExplanation(false);
-    generateQuizFn();
+    startQuiz();
     setResultData(null);
+  };
+
+  const startQuiz = async () => {
+    const result = await generateQuizFn();
+    if (!result?.success) {
+      toast.error(result?.error || "Failed to generate quiz questions");
+    }
   };
 
   if (generatingQuiz) {
@@ -118,7 +125,7 @@ export default function Quiz() {
           </p>
         </CardContent>
         <CardFooter>
-          <Button onClick={generateQuizFn} className="w-full">
+          <Button onClick={startQuiz} className="w-full">
             Start Quiz
           </Button>
         </CardFooter>
