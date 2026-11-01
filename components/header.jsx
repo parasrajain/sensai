@@ -9,7 +9,8 @@ import {
   StarsIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignInButton, UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +22,7 @@ import { checkUser } from "@/lib/checkUser";
 
 export default async function Header() {
   await checkUser();
+  const { userId } = await auth();
 
   return (
     <header className="fixed top-0 w-full border-b bg-background/80 backdrop-blur-md z-50 supports-[backdrop-filter]:bg-background/60">
@@ -37,7 +39,8 @@ export default async function Header() {
 
         {/* Action Buttons */}
         <div className="flex items-center space-x-2 md:space-x-4">
-          <SignedIn>
+          {userId ? (
+            <>
             <Link href="/dashboard">
               <Button
                 variant="outline"
@@ -84,15 +87,16 @@ export default async function Header() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </SignedIn>
+            </>
+          ) : null}
 
-          <SignedOut>
+          {!userId ? (
             <SignInButton>
               <Button variant="outline">Sign In</Button>
             </SignInButton>
-          </SignedOut>
+          ) : null}
 
-          <SignedIn>
+          {userId ? (
             <UserButton
               appearance={{
                 elements: {
@@ -103,7 +107,7 @@ export default async function Header() {
               }}
               afterSignOutUrl="/"
             />
-          </SignedIn>
+          ) : null}
         </div>
       </nav>
     </header>
