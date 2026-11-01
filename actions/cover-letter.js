@@ -73,10 +73,19 @@ export async function generateCoverLetter(data) {
       },
     });
 
-    return coverLetter;
+    return {
+      success: true,
+      coverLetter: {
+        id: coverLetter.id,
+        createdAt: coverLetter.createdAt.toISOString(),
+      },
+    };
   } catch (error) {
-    console.error("Error generating cover letter:", error.message);
-    throw new Error("Failed to generate cover letter");
+    console.error("Error generating cover letter:", error);
+    return {
+      success: false,
+      error: "Failed to generate cover letter. Please try again.",
+    };
   }
 }
 

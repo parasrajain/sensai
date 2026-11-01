@@ -64,10 +64,16 @@ export async function generateQuiz() {
     const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
     const quiz = JSON.parse(cleanedText);
 
-    return quiz.questions;
+    return {
+      success: true,
+      questions: quiz.questions,
+    };
   } catch (error) {
     console.error("Error generating quiz:", error);
-    throw new Error("Failed to generate quiz questions");
+    return {
+      success: false,
+      error: "Failed to generate quiz questions. Please try again.",
+    };
   }
 }
 
@@ -144,10 +150,20 @@ export async function saveQuizResult(questions, answers, score) {
       },
     });
 
-    return assessment;
+    return {
+      success: true,
+      assessment: {
+        ...assessment,
+        createdAt: assessment.createdAt.toISOString(),
+        updatedAt: assessment.updatedAt.toISOString(),
+      },
+    };
   } catch (error) {
     console.error("Error saving quiz result:", error);
-    throw new Error("Failed to save quiz result");
+    return {
+      success: false,
+      error: "Failed to save quiz result. Please try again.",
+    };
   }
 }
 

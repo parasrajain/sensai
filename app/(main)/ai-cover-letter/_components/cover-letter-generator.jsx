@@ -42,16 +42,19 @@ export default function CoverLetterGenerator() {
 
   // Update content when letter is generated
   useEffect(() => {
-    if (generatedLetter) {
+    if (generatedLetter?.success) {
       toast.success("Cover letter generated successfully!");
-      router.push(`/ai-cover-letter/${generatedLetter.id}`);
+      router.push(`/ai-cover-letter/${generatedLetter.coverLetter.id}`);
       reset();
     }
   }, [generatedLetter]);
 
   const onSubmit = async (data) => {
     try {
-      await generateLetterFn(data);
+      const result = await generateLetterFn(data);
+      if (!result?.success) {
+        throw new Error(result?.error || "Failed to generate cover letter");
+      }
     } catch (error) {
       toast.error(error.message || "Failed to generate cover letter");
     }
