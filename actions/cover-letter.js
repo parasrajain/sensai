@@ -46,7 +46,7 @@ export async function generateCoverLetter(data) {
 
   try {
     const response = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model: "llama-3.1-8b-instant",
       messages: [
         {
           role: "system",
@@ -91,7 +91,10 @@ export async function generateCoverLetter(data) {
     });
     return {
       success: false,
-      error: "Failed to generate cover letter. Please try again.",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to generate cover letter. Please try again.",
     };
   }
 }

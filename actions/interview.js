@@ -46,7 +46,7 @@ export async function generateQuiz() {
 
   try {
     const response = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model: "llama-3.1-8b-instant",
       messages: [
         {
           role: "system",
@@ -58,7 +58,6 @@ export async function generateQuiz() {
         },
       ],
       temperature: 0.7,
-      response_format: { type: "json_object" },
     });
 
     const text = response.choices?.[0]?.message?.content;
@@ -88,7 +87,10 @@ export async function generateQuiz() {
     });
     return {
       success: false,
-      error: "Failed to generate quiz questions. Please try again.",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to generate quiz questions. Please try again.",
     };
   }
 }
